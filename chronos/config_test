@@ -1,0 +1,60 @@
+package chronos
+
+import (
+	"errors"
+	"github.com/behance/go-chronos/chronos"
+	"log"
+)
+
+// mock go-chronos
+
+var jobsList chronos.Jobs
+
+type mock_chronos struct {
+}
+
+func MockClient(jobs chronos.Jobs) (chronos.Chronos, error) {
+	c := new(mock_chronos)
+	jobsList = jobs
+	return c, nil
+}
+
+func (mc *mock_chronos) Jobs() (*chronos.Jobs, error) {
+
+	log.Print("#########get jobs", len(jobsList))
+	return &jobsList, nil
+}
+
+func (mc *mock_chronos) DeleteJob(name string) error {
+	log.Print("#########del job", name)
+	jobs, _ := mc.Jobs()
+	for i, j := range *jobs {
+		if j.Name == name {
+			jobsList = append(jobsList[:i], jobsList[i+1:]...)
+		}
+	}
+	log.Print("#########get jobs", len(jobsList))
+	return nil
+}
+
+func (mc *mock_chronos) AddScheduledJob(job *chronos.Job) error {
+	jobsList = append(jobsList, *job)
+	log.Print("#########add", len(jobsList))
+	return nil
+}
+
+func (mc *mock_chronos) AddDependentJob(job *chronos.Job) error {
+	jobsList = append(jobsList, *job)
+	log.Print("#########add depend", len(jobsList))
+	return nil
+}
+
+func (mc *mock_chronos) RunOnceNowJob(job *chronos.Job) error {
+	return errors.New("Not Implemented for test")
+}
+func (mc *mock_chronos) DeleteJobTasks(name string) error {
+	return errors.New("Not Implemented for test")
+}
+func (mc *mock_chronos) StartJob(name string, args map[string]string) error {
+	return errors.New("Not Implemented for test")
+}
