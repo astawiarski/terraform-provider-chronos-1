@@ -1,8 +1,8 @@
 package main
 
 import (
-	"terraform-provider-chronos/chronos"
 	"github.com/hashicorp/terraform/plugin"
+	"github.com/tuier/terraform-provider-chronos/chronos"
 )
 
 func main() {
